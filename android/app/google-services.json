@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "616302619737",
+    "firebase_url": "https://ml-project3-191b7.firebaseio.com",
+    "project_id": "ml-project3-191b7",
+    "storage_bucket": "ml-project3-191b7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:616302619737:android:dbc68ab969b664c2849548",
+        "android_client_info": {
+          "package_name": "com.osama.ml_project3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "616302619737-g6lqbdr8vaoa73e57qjmf12ca24bjdcf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCV4onyRVV9yF-86gnaJ5YD7jhHQDpgb-A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "616302619737-g6lqbdr8vaoa73e57qjmf12ca24bjdcf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
