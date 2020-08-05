@@ -15,8 +15,16 @@ class ProjectML extends StatefulWidget {
 class _ProjectMLState extends State<ProjectML> {
   File _pickedImage;
   bool isLoaded = false;
+  bool isReadText = false;
+  bool isNull = true;
+
+  // Reading image
   List<String> textLines;
   var textOutput;
+
+  //classification
+  List<String> labelOutput;
+  List<String> itemsOutput;
 
   Future getImageCamera() async {
     final takeImage = await ImagePicker().getImage(source: ImageSource.camera);
@@ -35,9 +43,10 @@ class _ProjectMLState extends State<ProjectML> {
   }
 
   Future readText() async {
-    FirebaseVisionImage visionImage  = FirebaseVisionImage.fromFile(_pickedImage);
+    FirebaseVisionImage visionImage =
+        FirebaseVisionImage.fromFile(_pickedImage);
     TextRecognizer recognizeText = FirebaseVision.instance.textRecognizer();
-    VisionText readText = await recognizeText.processImage(visionImage );
+    VisionText readText = await recognizeText.processImage(visionImage);
     textLines = [];
 
     for (TextBlock block in readText.blocks) {
@@ -46,24 +55,64 @@ class _ProjectMLState extends State<ProjectML> {
           textLines.add(word.text);
         }*/
 
-          textLines.add(line.text);
-          //recognizeText.close();
+        textLines.add(line.text);
+        //recognizeText.close();
       }
 
       //print(textLines.join(" ")); // show result in console
 
     }
     textOutput = textLines.join(" ");
-    return  textOutput;
+    return textOutput;
   }
 
+  Future labeling() async {
+    FirebaseVisionImage visionImage =
+        FirebaseVisionImage.fromFile(_pickedImage);
+    final ImageLabeler labeler = FirebaseVision.instance
+        .imageLabeler(ImageLabelerOptions(confidenceThreshold: 0.50));
+    final List<ImageLabel> labels = await labeler.processImage(visionImage);
+    labelOutput = [];
+
+    for (ImageLabel label in labels) {
+
+
+      labelOutput.add(
+          'Type: ${label.text},Confidence: ${label.confidence.toStringAsFixed(2)} \n');
+
+    }
+    print(labelOutput);
+    itemsOutput = labelOutput.take(3).toList();
+  }
+
+  /* Future labeling() async {
+    FirebaseVisionImage visionImage =
+    FirebaseVisionImage.fromFile(_pickedImage);
+    final ImageLabeler labeler = FirebaseVision.instance.imageLabeler();
+    final List<ImageLabel> labels = await labeler.processImage(visionImage);
+    for (ImageLabel label in labels) {
+
+         String text = label.text;
+         String entityId = label.entityId;
+         double confidence = label.confidence;
+
+        print(text);
+        print(confidence);
+
+      labelOutput =
+      " type: ${label.text}   Confidence: ${label.confidence.toStringAsFixed(2)} \n";
+      print(labelOutput);
+      return labelOutput;
+
+    }
+  }*/
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.dark(),
       home: Scaffold(
         body: Center(
           child: Container(
+            decoration: BoxDecoration(color: Colors.indigo[800]),
             child: Column(
               children: <Widget>[
                 SizedBox(height: 100.0),
@@ -73,9 +122,9 @@ class _ProjectMLState extends State<ProjectML> {
                     RaisedButton(
                       child: Text(
                         'Gallery',
-                        style: TextStyle(fontSize: 28),
+                        style: TextStyle(fontSize: 28, color: Colors.black),
                       ),
-                      color: Colors.blueGrey,
+                      color: Colors.indigo[300],
                       onPressed: () {
                         getImageGallery();
                       },
@@ -83,10 +132,12 @@ class _ProjectMLState extends State<ProjectML> {
                     RaisedButton(
                       child: Text(
                         'Camera',
-                        style: TextStyle(fontSize: 28),
+                        style: TextStyle(fontSize: 28, color: Colors.black),
                       ),
-                      color: Colors.blueGrey,
-                      onPressed: getImageCamera,
+                      color: Colors.indigo[300],
+                      onPressed: () {
+                        getImageCamera();
+                      },
                     ),
                   ],
                 ),
@@ -107,21 +158,64 @@ class _ProjectMLState extends State<ProjectML> {
                     : Container(),
                 SizedBox(height: 10.0),
                 RaisedButton(
-                  child: Text('Read the image'),
-                  onPressed: () =>
-                  setState(() {
-                    readText();
-                  })
-                ),
+                    child: Text(
+                      'Read text',
+                      style: TextStyle(fontSize: 28, color: Colors.black),
+                    ),
+                    color: Colors.indigo[300],
+                    onPressed: () => setState(() {
+                          readText();
+                          isReadText = true;
+                        })),
                 SizedBox(height: 10.0),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    '$textOutput',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                     ),
-                ),
+                RaisedButton(
+                    color: Colors.indigo[300],
+                    child: Text(
+                      'Classification',
+                      style: TextStyle(fontSize: 28, color: Colors.black),
+                    ),
+                    onPressed: () => setState(() {
+                          labeling();
+                          isReadText = false;
+                        })),
                 SizedBox(height: 20.0),
+                Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: isReadText
+                        ? Text(
+                            '$textOutput',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          )
+                        : Column(
+                          children: <Widget>[
+                            Text(
+                                  '${itemsOutput[0]}',
+                                  style: TextStyle(
+                                      fontSize: 20, fontWeight: FontWeight.bold),
+                                ),
+                            Text(
+                              '${itemsOutput[1]}',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              '${itemsOutput[2]}',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+
+                       /* ListView(
+                            children: <Widget>[
+                              ListTile(
+                                title: Text('$labelOutput'),
+                              ),
+
+                            ],
+                            scrollDirection: Axis.horizontal,
+                          ),*/),
               ],
             ),
           ),
