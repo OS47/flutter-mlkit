@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:async';
 
 void main() => runApp(ProjectML());
 
@@ -16,7 +15,6 @@ class _ProjectMLState extends State<ProjectML> {
   File _pickedImage;
   bool isLoaded = false;
   bool isReadText = false;
-  bool isNull = true;
 
   // Reading image
   List<String> textLines;
@@ -25,6 +23,9 @@ class _ProjectMLState extends State<ProjectML> {
   //classification
   List<String> labelOutput;
   List<String> itemsOutput;
+  String item0;
+  String item1;
+  String item2;
 
   Future getImageCamera() async {
     final takeImage = await ImagePicker().getImage(source: ImageSource.camera);
@@ -83,6 +84,9 @@ class _ProjectMLState extends State<ProjectML> {
     }
     print(labelOutput);
     itemsOutput = labelOutput.take(3).toList();
+     item0 = itemsOutput[0];
+     item1 = itemsOutput[1];
+     item2 = itemsOutput[2];
   }
 
 
@@ -167,20 +171,26 @@ class _ProjectMLState extends State<ProjectML> {
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           )
-                        : Column(
+                        :
+                    /*Text(
+                      '$itemsOutput',
+                      style: TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
+                    ),*/
+                  Column(
                           children: <Widget>[
-                            Text(
-                                  '${itemsOutput[0]}',
+                            Text( '$item0'
+                                  ,
                                   style: TextStyle(
                                       fontSize: 20, fontWeight: FontWeight.bold),
                                 ),
                             Text(
-                              '${itemsOutput[1]}',
+                              '$item1',
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              '${itemsOutput[2]}',
+                              '$item2',
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
