@@ -85,27 +85,7 @@ class _ProjectMLState extends State<ProjectML> {
     itemsOutput = labelOutput.take(3).toList();
   }
 
-  /* Future labeling() async {
-    FirebaseVisionImage visionImage =
-    FirebaseVisionImage.fromFile(_pickedImage);
-    final ImageLabeler labeler = FirebaseVision.instance.imageLabeler();
-    final List<ImageLabel> labels = await labeler.processImage(visionImage);
-    for (ImageLabel label in labels) {
 
-         String text = label.text;
-         String entityId = label.entityId;
-         double confidence = label.confidence;
-
-        print(text);
-        print(confidence);
-
-      labelOutput =
-      " type: ${label.text}   Confidence: ${label.confidence.toStringAsFixed(2)} \n";
-      print(labelOutput);
-      return labelOutput;
-
-    }
-  }*/
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -206,16 +186,7 @@ class _ProjectMLState extends State<ProjectML> {
                             ),
                           ],
                         ),
-
-                       /* ListView(
-                            children: <Widget>[
-                              ListTile(
-                                title: Text('$labelOutput'),
-                              ),
-
-                            ],
-                            scrollDirection: Axis.horizontal,
-                          ),*/),
+                ),
               ],
             ),
           ),
